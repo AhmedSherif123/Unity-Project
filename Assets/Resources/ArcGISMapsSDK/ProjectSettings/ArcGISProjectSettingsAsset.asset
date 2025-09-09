@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c614a2c214f1c634dac1b68ce4624b91, type: 3}
+  m_Name: ArcGISProjectSettingsAsset
+  m_EditorClassIdentifier: 
+  apiKey: 'AAPTxy8BH1VEsoebNVZXo8HurEIfAg2XWITudb5uhY-I7sKNbeRueof6c7A8fET8KtwZiooMyalmfswwkIFTwSoAXzABHVrAiP2sOaOKiTdSD6gyoxdt0d_JJ4s-NT1wfZEJG_SGlotymzOCkRvGoEmISsUIuuQXORVY1MBd7csbE5Gwv25fYRcdeJZaj0cqItEo1ZwbYSpNVjP36NooXDCTF1Ye1lv9jYvocQLMc936T84.AT1_2x7jNMPY '
