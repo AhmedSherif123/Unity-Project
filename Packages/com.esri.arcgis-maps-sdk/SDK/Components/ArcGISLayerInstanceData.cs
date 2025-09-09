@@ -218,6 +218,7 @@ namespace Esri.ArcGISMapsSDK.Components
 		[Range(0, 1)]
 		public float Opacity;
 		public bool IsVisible;
+		public int UnityLayer = 0;
 		[Obsolete("Obsolete property, please use AuthenticationType instead.")]
 		public OAuthAuthenticationConfigurationMapping Authentication;
 		public ArcGISAuthenticationType AuthenticationType = ArcGISAuthenticationType.APIKey;
@@ -239,6 +240,7 @@ namespace Esri.ArcGISMapsSDK.Components
 				Source = Source,
 				Opacity = Opacity,
 				IsVisible = IsVisible,
+				UnityLayer = UnityLayer,
 				AuthenticationType = AuthenticationType,
 				BuildingSceneLayerFilter = (ArcGISBuildingSceneLayerFilterInstanceData)BuildingSceneLayerFilter.Clone(),
 				MeshModifications = (ArcGISMeshModificationsInstanceData)MeshModifications.Clone(),
@@ -259,6 +261,7 @@ namespace Esri.ArcGISMapsSDK.Components
 				   Source == data.Source &&
 				   Opacity == data.Opacity &&
 				   IsVisible == data.IsVisible &&
+				   UnityLayer == data.UnityLayer &&
 				   AuthenticationType == data.AuthenticationType &&
 				   EqualityComparer<ArcGISBuildingSceneLayerFilterInstanceData>.Default.Equals(BuildingSceneLayerFilter, data.BuildingSceneLayerFilter) &&
 				   EqualityComparer<ArcGISMeshModificationsInstanceData>.Default.Equals(MeshModifications, data.MeshModifications) &&
@@ -273,6 +276,7 @@ namespace Esri.ArcGISMapsSDK.Components
 			hash.Add(Source);
 			hash.Add(Opacity);
 			hash.Add(IsVisible);
+			hash.Add(UnityLayer);
 			hash.Add(AuthenticationType);
 			hash.Add(BuildingSceneLayerFilter);
 			hash.Add(MeshModifications);

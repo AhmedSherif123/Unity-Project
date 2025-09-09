@@ -21,7 +21,7 @@ namespace Esri.ArcGISMapsSDK.Editor.Components
 	[CustomPropertyDrawer(typeof(ArcGISLayerInstanceData))]
 	public class ArcGISLayerInstanceDataEditor : PropertyDrawer
 	{
-		private const int RowCount = 7;
+		private const int RowCount = 8;
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
@@ -30,6 +30,7 @@ namespace Esri.ArcGISMapsSDK.Editor.Components
 			var SourceProp = property.FindPropertyRelative("Source");
 			var opacityProp = property.FindPropertyRelative("Opacity");
 			var visibilityProp = property.FindPropertyRelative("IsVisible");
+			var unityLayerProp = property.FindPropertyRelative("UnityLayer");
 			var authenticationTypeProp = property.FindPropertyRelative("AuthenticationType");
 
 			var rectIndex = 0;
@@ -50,6 +51,7 @@ namespace Esri.ArcGISMapsSDK.Editor.Components
 					EditorGUI.PropertyField(GetRect(), SourceProp);
 					EditorGUI.PropertyField(GetRect(), opacityProp);
 					EditorGUI.PropertyField(GetRect(), visibilityProp);
+					unityLayerProp.intValue = EditorGUI.LayerField(GetRect(), new GUIContent("Unity Layer"), unityLayerProp.intValue);
 					EditorGUI.PropertyField(GetRect(), authenticationTypeProp);
 					if (checkScope.changed)
 					{
