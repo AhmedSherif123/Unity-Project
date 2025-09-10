@@ -12,6 +12,7 @@
 // USA
 //
 // email: legal@esri.com
+//
 using Esri.ArcGISMapsSDK.Authentication;
 using Esri.ArcGISMapsSDK.Memory;
 #if UNITY_EDITOR
