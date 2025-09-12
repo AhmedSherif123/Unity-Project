@@ -13,14 +13,12 @@ public class Positioning : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private TMP_Text loc;
-    [SerializeField] private TMP_Text Pipes_Text;
     [SerializeField] private TMP_Text CamerasPos;
 
     [Header("Transforms")]
     [SerializeField] private HPTransform XRCamPos;
     [SerializeField] private HPTransform MapCamPos;
     [SerializeField] private HPTransform Mypos;
-    [SerializeField] private HPTransform PipesPos;
     [SerializeField] public HPTransform PluginPos;
 
     [Header("Debug / Fake Location")]
@@ -29,7 +27,6 @@ public class Positioning : MonoBehaviour
 
     public bool gpsReady = false;
     public bool usingFake = false;
-    public bool pipesPlaced = false;
 
     public Vector2 lastLatLon;
     public float lastUIUpdateTime;
@@ -92,11 +89,8 @@ public class Positioning : MonoBehaviour
 
             Vector2 mercatorPos = LatLonToWebMercator(currentLat, currentLon);
 
-            // Place pipes only once
+          
 
-
-
-            // Update camera and player transforms
           UpdateTransforms(mercatorPos);
 
             PluginPosition();
@@ -124,19 +118,14 @@ private void UpdateTransforms(Vector2 mercatorPos)
     // Player
     Mypos.UniversePosition = new double3(
         XRCamPos.UniversePosition.x,
-        Mypos.UniversePosition.y,
+       Mypos.UniversePosition.y,
         XRCamPos.UniversePosition.z
     );
-// Pipes = XR camera position
-    PipesPos.UniversePosition = new double3(
-        XRCamPos.UniversePosition.x,
-        XRCamPos.UniversePosition.y,
-        XRCamPos.UniversePosition.z
-    );
+
     // Map camera
     MapCamPos.UniversePosition = new double3(
         mercatorPos.x,
-        MapCamPos.UniversePosition.y,
+       MapCamPos.UniversePosition.y,
         mercatorPos.y
     );
       
@@ -151,16 +140,8 @@ private void UpdateTransforms(Vector2 mercatorPos)
         loc.text = $"{source}\nLat: {lat:F6}\nLon: {lon:F6}\nAlt: {alt:F1} m" +
                    $"\nX: {XRCamPos.UniversePosition.x:F3} m\nY: {XRCamPos.UniversePosition.z:F3} m";
 
-        Pipes_Text.text = $"Pipes:\nX: {PipesPos.UniversePosition.x:F2}\nY: {PipesPos.UniversePosition.y:F2}\nZ: {PipesPos.UniversePosition.z:F2}";
     }
 
-    private void PlacePipes(float lat, float lon)
-    {
-        Vector2 pipeMercator = LatLonToWebMercator(lat, lon);
-        PipesPos.UniversePosition = new double3(pipeMercator.x, XRCamPos.UniversePosition.y, pipeMercator.y);
-        pipesPlaced = true;
-   
-    }
 
     private void UseFakeLocation()
     {

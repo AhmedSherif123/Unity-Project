@@ -24,6 +24,7 @@ namespace Esri.ArcGISMapsSDK.Editor.Components
 			layerInstanceData.AuthenticationType.ApplyToSerializedProperty(serializedProperty.FindPropertyRelative("AuthenticationType"));
 			layerInstanceData.IsVisible.ApplyToSerializedProperty(serializedProperty.FindPropertyRelative("IsVisible"));
 			layerInstanceData.Name.ApplyToSerializedProperty(serializedProperty.FindPropertyRelative("Name"));
+			layerInstanceData.Name.ApplyToSerializedProperty(serializedProperty.FindPropertyRelative("UnityLayer"));
 			layerInstanceData.Opacity.ApplyToSerializedProperty(serializedProperty.FindPropertyRelative("Opacity"));
 			layerInstanceData.Source.ApplyToSerializedProperty(serializedProperty.FindPropertyRelative("Source"));
 			layerInstanceData.Type.ApplyToSerializedProperty(serializedProperty.FindPropertyRelative("Type"));

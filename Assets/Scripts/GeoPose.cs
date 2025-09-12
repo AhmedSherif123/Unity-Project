@@ -71,7 +71,6 @@
 //     }
 // }
 
-
 using UnityEngine;
 using TMPro;
 
@@ -80,28 +79,27 @@ public class GeoPosePrinter : MonoBehaviour
 {
     public Camera arCamera;
     public float rayLength = 10f;
-    public float offsett;
+    public float offsett = 1f;
     [SerializeField] private LineRenderer lineRenderer;
 
     [Header("UI")]
-    public TMP_Text rotationText; // Assign in Inspector
+    public TMP_Text rotationText; 
 
     [Header("Filters")]
     [Range(0.01f, 1f)]
-    public float gyroFilterStrength = 0.9f;    // keep fast response
+    public float gyroFilterStrength = 0.9f;    
     [Range(0.01f, 1f)]
-    public float compassFilterStrength = 0.1f; // keep compass stable
+    public float compassFilterStrength = 0.1f; 
 
     private Quaternion smoothedGyro = Quaternion.identity;
     private float smoothedHeading = 0f;
 
-    // Orientation correction (Landscape Left)
+    // Orientation correction for Landscape Left
     private static readonly Quaternion orientationCorrection = Quaternion.Euler(90, 0, 90);
 
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-
         if (arCamera == null)
             arCamera = Camera.main;
 
@@ -109,7 +107,7 @@ public class GeoPosePrinter : MonoBehaviour
         Input.gyro.enabled = true;
         Input.gyro.updateInterval = 0.01f; 
         Input.compass.enabled = true;
-        
+
         // Setup line renderer
         lineRenderer.startWidth = 0.01f;
         lineRenderer.endWidth = 1f;
@@ -118,14 +116,17 @@ public class GeoPosePrinter : MonoBehaviour
         lineRenderer.startColor = Color.green;
         lineRenderer.endColor = Color.green;
 
-        // Init smoothing
-        smoothedGyro = GyroToUnity(Input.gyro.attitude);
         smoothedHeading = Input.compass.trueHeading;
+        smoothedGyro = GyroToUnity(Input.gyro.attitude);
     }
 
     void Update()
     {
         if (arCamera == null) return;
+
+        // --- Compass heading (true north) ---
+        float rawHeading = Input.compass.trueHeading;
+        smoothedHeading = Mathf.LerpAngle(smoothedHeading, rawHeading, compassFilterStrength);
 
         // --- Gyroscope orientation ---
         Quaternion rawGyro = GyroToUnity(Input.gyro.attitude);
@@ -133,19 +134,16 @@ public class GeoPosePrinter : MonoBehaviour
 
         smoothedGyro = Quaternion.Slerp(smoothedGyro, rawGyro, gyroFilterStrength);
 
-        // --- Compass heading (true north) ---
-        float rawHeading = Input.compass.trueHeading;
-        smoothedHeading = Mathf.LerpAngle(smoothedHeading, rawHeading, compassFilterStrength);
-
         // --- Apply rotations ---
-        // Camera = full gyro orientation (fast & smooth)
-        arCamera.transform.rotation = smoothedGyro;
+        // Camera: gyro for pitch/roll, compass for Y
+        Vector3 euler = smoothedGyro.eulerAngles;
+        arCamera.transform.rotation = Quaternion.Euler(euler.x, smoothedHeading, euler.z);
 
-        // Object = only Y from compass (true heading)
+        // Object: only Y from compass
         transform.rotation = Quaternion.Euler(0, smoothedHeading, 0);
 
-        // --- Draw forward line (based on object heading) ---
-        Vector3 origin = new Vector3(transform.position.x, transform.position.y + offsett, transform.position.z);
+        // --- Draw forward line ---
+        Vector3 origin = transform.position + Vector3.up * offsett;
         Vector3 endPos = origin + transform.forward * rayLength;
         lineRenderer.SetPosition(0, origin);
         lineRenderer.SetPosition(1, endPos);
@@ -153,19 +151,17 @@ public class GeoPosePrinter : MonoBehaviour
         // --- Update UI ---
         if (rotationText != null)
         {
-            Vector3 camEuler = smoothedGyro.eulerAngles;
+            Vector3 camEuler = arCamera.transform.eulerAngles;
             rotationText.text =
                 $"Camera Pitch (X): {camEuler.x:F1}°\n" +
-                $"Camera Yaw (Gyro): {camEuler.y:F1}°\n" +
+                $"Camera Yaw (Y): {camEuler.y:F1}°\n" +
                 $"Camera Roll (Z): {camEuler.z:F1}°\n\n" +
                 $"Object Y (Compass Heading): {smoothedHeading:F1}°";
         }
     }
 
-    // Convert gyroscope right-handed coordinates to Unity's left-handed
     private static Quaternion GyroToUnity(Quaternion q)
     {
         return new Quaternion(q.x, q.y, -q.z, -q.w);
     }
 }
-
